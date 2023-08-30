@@ -159,6 +159,8 @@ export default function Pos_dashboard() {
     const userData: User = JSON.parse(user);
 
     let transactionData: SalesTransactionWrite = transaction;
+    console.log(`updating ${updating}`);
+    console.log(`status ${status}`);
     // console.log(`updating status: ${updatingStatus}`);
     if (
       (updatingStatus == false && addTransaction) ||
@@ -551,6 +553,7 @@ export default function Pos_dashboard() {
                   transaction={transaction}
                   finilizedTransaction={finilizedTransaction}
                   clearTransactionAndItems={clearTransactionAndItems}
+                  setAddTransaction={setAddTransaction}
                 />
               </div>
             </div>

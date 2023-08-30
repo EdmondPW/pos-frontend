@@ -3,6 +3,7 @@ import { SalesTransactionWrite } from "../../type/salesTransactionType";
 interface ActionTransactionProps {
   setShowCheckout: React.Dispatch<React.SetStateAction<boolean>>;
   setTransaction: React.Dispatch<React.SetStateAction<SalesTransactionWrite>>;
+  setAddTransaction: React.Dispatch<React.SetStateAction<boolean>>;
   finilizedTransaction: (
     status: string,
     updating: boolean,
@@ -16,6 +17,7 @@ export default function ActionTransaction({
   setShowCheckout,
   setTransaction,
   transaction,
+  setAddTransaction,
   finilizedTransaction,
   clearTransactionAndItems,
 }: ActionTransactionProps) {
@@ -63,8 +65,9 @@ export default function ActionTransaction({
                 console.log("Tunda di klik");
                 if (
                   transaction.sales_transaction_status != "DONE" &&
-                  transaction.sales_transaction_status != "TUNDA"
+                  transaction.sales_transaction_status != "VOID"
                 ) {
+                  setAddTransaction(true);
                   finilizedTransaction("TUNDA", false, transactionData);
                 }
               }}
