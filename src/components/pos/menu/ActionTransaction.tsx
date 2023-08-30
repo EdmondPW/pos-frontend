@@ -63,9 +63,12 @@ export default function ActionTransaction({
                 transactionData.sales_transaction_status = "TUNDA";
                 setTransaction(transactionData);
                 console.log("Tunda di klik");
+                console.log(
+                  `status tunda: ${transactionData.sales_transaction_status}`
+                );
                 if (
-                  transaction.sales_transaction_status != "DONE" &&
-                  transaction.sales_transaction_status != "VOID"
+                  transactionData.sales_transaction_status != "DONE" &&
+                  transactionData.sales_transaction_status != "VOID"
                 ) {
                   setAddTransaction(true);
                   finilizedTransaction("TUNDA", false, transactionData);
