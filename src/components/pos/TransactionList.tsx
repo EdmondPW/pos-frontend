@@ -35,7 +35,8 @@ export default function TransactionList({
   >([]);
 
   const accessToken = localStorage.getItem("accessToken") as string;
-  const baseURL = "https://pos-backend.piasarimurni.site/api";
+  // const baseURL = "https://pos-backend.piasarimurni.site/api";
+  const baseURL = "https://127.0.0.1:4000/api";
 
   const setNewTransaction = async (transactionId: number) => {
     let customerId = 0;

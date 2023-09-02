@@ -26,8 +26,8 @@ export default function ItemButton({
 
   const [skip, setSkip] = useState(false);
 
-  // const productionUrl = "http://pos-backend.piasarimurni.site/api/product";
-  const baseURL = "https://pos-backend.piasarimurni.site/api";
+  const baseURL = "https://127.0.0.1:4000/api";
+  // const baseURL = "https://pos-backend.piasarimurni.site/api";
 
   const { data, isLoading } = useQuery({
     queryKey: ["products"],

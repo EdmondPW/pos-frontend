@@ -32,8 +32,8 @@ export default function Navigation({
     }
   }, []);
 
-  const baseURL = "https://pos-backend.piasarimurni.site/api";
-  // const productionUrl = "http://pos-backend.piasarimurni.site/api/user/logout";
+  // const baseURL = "https://pos-backend.piasarimurni.site/api";
+  const baseURL = "https://127.0.0.1:4000/api";
 
   const handleLogout = async () => {
     printShiftWhenLogout();

@@ -81,7 +81,8 @@ export default function Pos_dashboard() {
   //   SalesTransactionRead[]
   // >([]);
 
-  const baseURL = "https://pos-backend.piasarimurni.site/api";
+  // const baseURL = "https://pos-backend.piasarimurni.site/api";
+  const baseURL = "https://127.0.0.1:4000/api";
 
   const setupTransaction = async () => {
     const user = localStorage.getItem("userData");

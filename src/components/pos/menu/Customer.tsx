@@ -17,8 +17,8 @@ export default function Customer({
   const accessToken = localStorage.getItem("accessToken") as string;
 
   //   const productionUrl =
-  // "http://pos-backend.piasarimurni.site/api/customer-type";
-  const baseURL = "https://pos-backend.piasarimurni.site/api";
+  const baseURL = "https://127.0.0.1:4000/api";
+  // const baseURL = "https://pos-backend.piasarimurni.site/api";
 
   const { data, isLoading } = useQuery({
     queryKey: ["customerType"],

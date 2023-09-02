@@ -22,8 +22,10 @@ export default function Menu({
   const [skip, setSkip] = useState(false);
   const [typeId, setTypeId] = useState(0);
   const accessToken = localStorage.getItem("accessToken");
-  // const productionUrl = "http://pos-backend.piasarimurni.site/api/product-type";
-  const baseURL = "https://pos-backend.piasarimurni.site/api";
+
+  // const baseURL = "https://pos-backend.piasarimurni.site/api";
+  const baseURL = "https://127.0.0.1:4000/api";
+
   const { data, isLoading } = useQuery({
     queryKey: ["productType"],
     queryFn: async () => {
