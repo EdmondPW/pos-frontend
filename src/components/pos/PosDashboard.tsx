@@ -74,6 +74,7 @@ export default function Pos_dashboard() {
   const [totalPrice, setTotalPrice] = useState(0);
   const [showCheckout, setShowCheckout] = useState(false);
   const [showTransactionList, setShowTransactionList] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
   const accessToken = localStorage.getItem("accessToken") as string;
   const [addTransaction, setAddTransaction] = useState(false);
   const [updatingStatus, setUpdatingStatus] = useState(false);
@@ -82,7 +83,7 @@ export default function Pos_dashboard() {
   // >([]);
 
   // const baseURL = "https://pos-backend.piasarimurni.site/api";
-  const baseURL = "https://127.0.0.1:4000/api";
+  const baseURL = "http://127.0.0.1:4000/api";
 
   const setupTransaction = async () => {
     const user = localStorage.getItem("userData");
@@ -158,17 +159,18 @@ export default function Pos_dashboard() {
     const user = localStorage.getItem("userData") as string;
     const customerTypeId: number = JSON.parse(customerType);
     const userData: User = JSON.parse(user);
-
+    console.log(transaction);
     let transactionData: SalesTransactionWrite = transaction;
     console.log(`updating ${updating}`);
+    console.log(`updating status ${updatingStatus}`);
     console.log(`status ${status}`);
-    // console.log(`updating status: ${updatingStatus}`);
+    console.log(`add tarnsaction: ${addTransaction}`);
+    let totalDiscount = 0;
     if (
-      (updatingStatus == false && addTransaction) ||
-      (updating == false && addTransaction)
+      (updatingStatus == false && addTransaction && status != "VOID") ||
+      (updating == false && addTransaction && status != "VOID")
     ) {
-      let totalDiscount = 0;
-
+      console.log("add transaction");
       {
         let currentTransactionNumber = "001";
         await axios
@@ -291,6 +293,90 @@ export default function Pos_dashboard() {
       setInitialTransaction(true);
       clearTransactionAndItems();
       setShowCheckout(false);
+    } else if (
+      (updatingStatus == true && addTransaction && status != "VOID") ||
+      (updating == true && addTransaction && status != "VOID")
+    ) {
+      console.log("bayar yang tunda");
+      items.forEach((item) => {
+        if (
+          item.product_type_code == "TCPKC" ||
+          item.product_type_code == "TCPKP" ||
+          item.product_type_code == "TCPSS"
+        ) {
+          totalDiscount += item.discount;
+        }
+      });
+
+      console.log(transaction);
+
+      transactionData.total_discount =
+        totalDiscount + payment.addedDiscount + payment.roundDown;
+
+      transactionData.total_price = totalPrice + totalDiscount;
+
+      transactionData.customer_type_id = transaction.customer_type_id;
+      transactionData.total_paid_cash = payment.cash;
+      transactionData.total_paid_debit = payment.debit;
+      transactionData.total_paid_transfer = payment.transfer;
+      transactionData.total_paid_credit = payment.credit;
+      transactionData.sales_transaction_status = status;
+      transactionData.total_paid_ojol = payment.ojol;
+      transactionData.total_nett =
+        transactionData.total_price - transactionData.total_discount;
+      transactionData.cash_back =
+        payment.cash +
+        payment.credit +
+        payment.debit +
+        payment.ojol +
+        payment.transfer -
+        transactionData.total_nett;
+
+      const customerTypeId = localStorage.getItem("customerTypeId") as string;
+      const integerCustomerTypeId = parseInt(customerTypeId);
+      console.log("initeger: " + integerCustomerTypeId);
+      await axios.put(
+        `${baseURL}/sales-transaction/${transactionData.id}`,
+        {
+          sales_transaction_number: transactionData.sales_transaction_number,
+          sales_transaction_status: transactionData.sales_transaction_status,
+          total_price: transactionData.total_price,
+          total_discount: transactionData.total_discount,
+          total_paid_cash: transactionData.total_paid_cash,
+          total_paid_debit: transactionData.total_paid_debit,
+          total_paid_credit: transactionData.total_paid_credit,
+          total_paid_transfer: transactionData.total_paid_transfer,
+          total_paid_ojol: transactionData.total_paid_ojol,
+          total_nett: transactionData.total_nett,
+          cash_back: transactionData.cash_back,
+          user_id: transactionData.user_id,
+          customer_type_id: parseInt(customerTypeId),
+        },
+        {
+          headers: {
+            Authorization: accessToken,
+          },
+        }
+      );
+
+      if (
+        (updatingStatus == true && addTransaction) ||
+        (updating == true && addTransaction)
+      ) {
+        setPayment({
+          cash: 0,
+          debit: 0,
+          credit: 0,
+          transfer: 0,
+          ojol: 0,
+          addedDiscount: 0,
+          roundDown: 0,
+        });
+      }
+
+      setUpdatingStatus(false);
+      setInitialTransaction(true);
+      clearTransactionAndItems();
     } else {
       transactionData.sales_transaction_status = status;
       if (data != null) {
@@ -317,7 +403,7 @@ export default function Pos_dashboard() {
             total_nett: transactionData.total_nett,
             cash_back: transactionData.cash_back,
             user_id: transactionData.user_id,
-            customer_type_id: customerTypeId,
+            customer_type_id: transactionData.customer_type_id,
           },
           {
             headers: {
@@ -332,6 +418,7 @@ export default function Pos_dashboard() {
         (updatingStatus == true && addTransaction == false) ||
         (updating == true && addTransaction == false)
       ) {
+        console.log("reset payment");
         setPayment({
           cash: 0,
           debit: 0,
@@ -361,6 +448,11 @@ export default function Pos_dashboard() {
     transactionData.sales_transaction_status = "";
     setTransaction(transactionData);
     setItems([]);
+    localStorage.removeItem("customerType");
+    localStorage.removeItem("customerTypeId");
+    localStorage.removeItem("customerDiscount");
+    localStorage.setItem("setCustomerType", "none");
+    setShowMenu(false);
   };
 
   const getAllTransactionThisShif = async () => {
@@ -390,6 +482,8 @@ export default function Pos_dashboard() {
     if (updatingStatus == false) {
       // console.log("this is add new transaction");
       finilizedTransaction();
+    } else if (updatingStatus == true && addTransaction == true) {
+      finilizedTransaction("DONE", true);
     }
   }, [payment]);
 
@@ -453,6 +547,7 @@ export default function Pos_dashboard() {
         setUpdatingStatus={setUpdatingStatus}
         setItems={setItems}
         setTransaction={setTransaction}
+        setDiscountPercentage={setDiscountPercentage}
       />
       <Checkout
         setAddTransaction={setAddTransaction}
@@ -536,10 +631,15 @@ export default function Pos_dashboard() {
           <div className="col-span-4 bg-white rounded-md shadow-md p-3 h-full">
             <div className="flex flex-col h-full gap-2">
               <div className="bg-slate-300 w-full h-2/6 rounded-md shadow-lg p-3">
-                <Customer setDiscountPercenteage={setDiscountPercentage} />
+                <Customer
+                  setShowMenu={setShowMenu}
+                  setDiscountPercenteage={setDiscountPercentage}
+                />
               </div>
               <div className="bg-slate-300 w-full h-3/6 rounded-md shadow-lg p-3">
-                <div className="flex flex-row h-full gap-2">
+                <div
+                  className={showMenu ? "flex flex-row h-full gap-2" : "hidden"}
+                >
                   <Menu
                     setItems={setItems}
                     items={items}

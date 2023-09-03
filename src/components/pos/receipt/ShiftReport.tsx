@@ -141,7 +141,10 @@ const ShiftReport = forwardRef(
 
     return (
       <>
-        <div ref={ref} className="w-[288px]  flex flex-col items-center p-2">
+        <div
+          ref={ref}
+          className="w-[288px]  flex flex-col items-center p-2 font-saxmono"
+        >
           <br />
           <br />
           <p className="font-bold">LAPORAN AKHIR SHIFT</p>

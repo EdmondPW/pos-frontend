@@ -9,7 +9,11 @@ import {
   ItemTransactionWriteWithItemData,
 } from "../type/itemTransactionType";
 import axios from "axios";
-import { CustomerType } from "./menu/Customer";
+import {
+  CustomerType,
+  checkCustomerDiscountPercentage,
+  checkCustomerDiscountType,
+} from "./menu/Customer";
 
 interface TransactionListProps {
   showTransactionList: boolean;
@@ -20,6 +24,7 @@ interface TransactionListProps {
   setItems: React.Dispatch<
     React.SetStateAction<ItemTransactionWriteWithItemData[]>
   >;
+  setDiscountPercentage: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export default function TransactionList({
@@ -29,6 +34,7 @@ export default function TransactionList({
   getAllTransactionThisShif,
   setTransaction,
   setItems,
+  setDiscountPercentage,
 }: TransactionListProps) {
   const [transactionList, setTransactionList] = useState<
     SalesTransactionReadWithCreateAt[]
@@ -36,15 +42,18 @@ export default function TransactionList({
 
   const accessToken = localStorage.getItem("accessToken") as string;
   // const baseURL = "https://pos-backend.piasarimurni.site/api";
-  const baseURL = "https://127.0.0.1:4000/api";
+  const baseURL = "http://127.0.0.1:4000/api";
 
   const setNewTransaction = async (transactionId: number) => {
     let customerId = 0;
-
+    // let customerType = "";
+    let customerTypeCode = "";
     console.log("Setting new transaction");
     transactionList.forEach((item) => {
       if (transactionId == item.id) {
         customerId = item.customer_type.id;
+        // customerType = item.customer_type.customer_type_name;
+        customerTypeCode = item.customer_type.customer_type_code;
         setTransaction({
           id: item.id,
           sales_transaction_number: item.sales_transaction_number,
@@ -59,8 +68,19 @@ export default function TransactionList({
           total_nett: item.total_nett,
           cash_back: item.cash_back,
           user_id: item.user.id,
-          customer_type_id: item.customer_type.id,
+          customer_type_id: customerId,
         });
+        console.log("new transaction");
+        console.log(item);
+        localStorage.setItem("customerTypeId", customerId.toString());
+        localStorage.setItem("customerType", customerTypeCode);
+        const discount: checkCustomerDiscountType =
+          checkCustomerDiscountPercentage(customerTypeCode);
+        localStorage.setItem(
+          "customerDiscount",
+          discount.percentage.toString()
+        );
+        setDiscountPercentage(discount.percentage);
       }
     });
 
@@ -71,14 +91,13 @@ export default function TransactionList({
 
     let getDiscountPercentage = 0;
 
-    const getCustomerType: CustomerType = await axios.get(
-      `${baseURL}/customer-type/${customerId}`,
-      {
-        headers: {
-          Authorization: accessToken,
-        },
-      }
-    );
+    const data = await axios.get(`${baseURL}/customer-type/${customerId}`, {
+      headers: {
+        Authorization: accessToken,
+      },
+    });
+    const getCustomerType: CustomerType = data.data;
+    console.log(getCustomerType);
     if (getCustomerType.customer_type_code == "TKOA") {
       getDiscountPercentage = 10;
     }
@@ -91,10 +110,10 @@ export default function TransactionList({
     if (getCustomerType.customer_type_code == "TKOD") {
       getDiscountPercentage = 22.5;
     }
-
+    console.log("the discount is");
     getItems.forEach((item) => {
       const discounted =
-        item.product.price * item.quantity * (getDiscountPercentage / 100);
+        (item.product.price * item.quantity * getDiscountPercentage) / 100;
       newSetItems.push({
         id: item.id,
         quantity: item.quantity,
@@ -103,7 +122,7 @@ export default function TransactionList({
         product_code: item.product.product_code,
         product_name: item.product.product_name,
         product_price: item.product.price,
-        product_type_code: item.product.product_code,
+        product_type_code: item.product.product_type.product_type_code,
         discount: discounted,
         isBox: false,
       });

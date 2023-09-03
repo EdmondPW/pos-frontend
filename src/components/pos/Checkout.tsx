@@ -39,6 +39,8 @@ export default function Checkout({
   const [formatedChange, setFormatedChange] = useState("");
   const [textChange, setTextChange] = useState("");
 
+  console.log(transaction);
+
   const handlePayment = () => {
     if (
       cash + debit + credit + transfer + ojol >=

@@ -24,7 +24,7 @@ export default function Menu({
   const accessToken = localStorage.getItem("accessToken");
 
   // const baseURL = "https://pos-backend.piasarimurni.site/api";
-  const baseURL = "https://127.0.0.1:4000/api";
+  const baseURL = "http://127.0.0.1:4000/api";
 
   const { data, isLoading } = useQuery({
     queryKey: ["productType"],
@@ -57,7 +57,7 @@ export default function Menu({
   return (
     <>
       <div className="w-1/3 h-full">
-        <div className="grid grid-rows-5 gap-3 h-full">
+        <div className="grid grid-rows-5 gap-3 h-full" role="group">
           {isLoading ? (
             <p key={999}>Menu is loading</p>
           ) : (
@@ -67,7 +67,7 @@ export default function Menu({
                   type="button"
                   key={_item.id}
                   onClick={() => setTypeId(_item.id)}
-                  className="bg-green-400 focus:bg-green-500 w-40 h-full rounded-lg border-2 border-slate-700 focus:border-green-700 focus:border-4 font-bold text-white"
+                  className="bg-green-400 focus:bg-green-500 h-full rounded-lg border-2 border-slate-700 focus:border-green-700 focus:border-4 font-bold text-white"
                 >
                   {_item.product_type_name}
                 </button>

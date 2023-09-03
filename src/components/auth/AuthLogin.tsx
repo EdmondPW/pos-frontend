@@ -29,7 +29,7 @@ function AuthLogin() {
     setPassword("");
   };
 
-  const baseURL = "https://127.0.0.1:4000/api";
+  const baseURL = "http://127.0.0.1:4000/api";
   // const baseURL = "https://pos-backend.piasarimurni.site/api";
 
   const handleLogin = async () => {
@@ -42,6 +42,7 @@ function AuthLogin() {
           const decodedToken = jwtDecode<TokenData>(data.accessToken);
           localStorage.setItem("userData", JSON.stringify(decodedToken.user));
           localStorage.setItem("accessToken", data.accessToken);
+          localStorage.setItem("setCustomerType", "none");
           navigate("/pos");
         })
         .catch((error) => {

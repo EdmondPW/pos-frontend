@@ -74,7 +74,7 @@ export default function ActionTransaction({
                   finilizedTransaction("TUNDA", false, transactionData);
                 }
               }}
-              className="bg-blue-400 focus:bg-blue-500 w-40 h-20 rounded-lg border-2 border-slate-700 focus:border-blue-700 focus:border-4 font-bold text-white"
+              className="hidden bg-blue-400 focus:bg-blue-500 w-40 h-20 rounded-lg border-2 border-slate-700 focus:border-blue-700 focus:border-4 font-bold text-white"
             >
               TUNDA
             </button>

@@ -1,7 +1,6 @@
 import { useEffect, useState, forwardRef, Ref } from "react";
 import { SalesTransactionWrite } from "../../type/salesTransactionType";
 import { ItemTransactionWriteWithItemData } from "../../type/itemTransactionType";
-import PiaSariMurniLogo from "../../../assets/SariMurniLogo.jpg";
 import { User } from "../../type/userType";
 import { formatingValue } from "../PosDashboard";
 
@@ -199,18 +198,20 @@ const ReceiptLayout = forwardRef(
 
     return (
       <>
-        <div ref={ref} className="w-[288px]  flex flex-col items-center p-2">
+        <div
+          ref={ref}
+          className="w-[288px]  flex flex-col items-center p-2 font-saxmono"
+        >
           <div className="flex w-full items-center">
-            <img src={PiaSariMurniLogo} className=" w-[75px]" alt="" />
             <div className="flex flex-col items-center w-full mx-auto">
-              <h1 className="text-2xl font-bold">PIA SARI MURNI</h1>
+              <h1 className="text-2xl font-bold font-times">PIA SARI MURNI</h1>
               <div className="flex flex-col items-center text-xs">
                 <h1>Jl. Kembang Jepun No. 34, Surabaya</h1>
                 <h1>031-99096309 | 0852-0888-1940</h1>
               </div>
             </div>
           </div>
-          <h1>------------------------------------------</h1>
+          <h1>-------------------------------</h1>
           <div className="flex flex-row w-full">
             <p className="mx-auto">{customerTypeString}</p>
             <p className="mx-auto">
@@ -218,7 +219,7 @@ const ReceiptLayout = forwardRef(
             </p>
             <p className="mx-auto">{transaction.sales_transaction_number}</p>
           </div>
-          <h1>------------------------------------------</h1>
+          <h1>-------------------------------</h1>
           {items.map((item, index) => {
             let formatedPrice = "";
             if (item.isBox) {
@@ -258,7 +259,7 @@ const ReceiptLayout = forwardRef(
               </>
             );
           })}
-          <h1>------------------------------------------</h1>
+          <h1>-------------------------------</h1>
           <div className="flex w-full">
             <p>TOTAL GROSS: </p>
             <p className="ml-auto">{totalPriceBeforeDiscount}</p>
@@ -271,12 +272,12 @@ const ReceiptLayout = forwardRef(
             <p>Pembulatan: </p>
             <p className="ml-auto">({roundDown})</p>
           </div>
-          <h1>------------------------------------------</h1>
+          <h1>-------------------------------</h1>
           <div className="flex place-content-end w-full">
             <p>TOTAL NETT: </p>
             <p className="ml-auto">{fomatedTotalPriceRoundDown}</p>
           </div>
-          <h1>------------------------------------------</h1>
+          <h1>-------------------------------</h1>
           {transaction.customer_type_id == 3 ||
           transaction.customer_type_id == 5 ||
           transaction.customer_type_id == 6 ||

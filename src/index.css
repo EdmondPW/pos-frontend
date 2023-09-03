@@ -16,3 +16,13 @@
     }
   }
 }
+
+@font-face {
+  font-family: "saxmono";
+  src: url("../public/fonts/saxmono.ttf");
+}
+
+@font-face {
+  font-family: "times";
+  src: url("../public/fonts/times.ttf");
+}

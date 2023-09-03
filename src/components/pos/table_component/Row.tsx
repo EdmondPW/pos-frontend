@@ -138,6 +138,8 @@ export default function Row({
       (item.product_price * item.quantity * discountPercentage) / 100
     );
 
+    console.log("item code:" + item.product_type_code);
+
     setFormatedPrice({
       price: _formatedPrice,
       discount: _formatedDiscount,
@@ -155,7 +157,9 @@ export default function Row({
       <th className="px-5 py-4 font-medium text-gray-900 whitespace-nowrap">
         {item.product_code}
       </th>
-      <td className="px-5 py-4">{item.product_name}</td>
+      <td className="px-5 py-4 text-gray-900 font-semibold">
+        {item.product_name}
+      </td>
       <td className="px-5 py-4">
         <div className="flex flex-row ">
           <button
@@ -185,7 +189,7 @@ export default function Row({
             id="quantity"
             value={box ? item.quantity / 4 : item.quantity}
             readOnly
-            className="w-11 p-1 text-center bg-transparent text-sm font-medium focus:outline-none"
+            className="w-11 p-1 text-center bg-transparent text-sm text-gray-900 font-medium focus:outline-none"
           />
 
           <button
@@ -228,30 +232,32 @@ export default function Row({
             </label>
             {box ? (
               <>
-                <p className="font-bold">box</p>
+                <p className="font-bold text-gray-900">box</p>
               </>
             ) : (
               <>
-                <p className="font-bold">pcs</p>
+                <p className="font-bold text-gray-900">pcs</p>
               </>
             )}
           </>
         ) : (
           <>
-            <p className="font-bold">pcs</p>
+            <p className="font-bold text-gray-900">pcs</p>
           </>
         )}
       </td>
 
-      <td className="px-5 py-4">{formatedPrice.price}</td>
-      <td className="px-5 py-4">
+      <td className="px-5 py-4 text-gray-900 font-semibold">
+        {formatedPrice.price}
+      </td>
+      <td className="px-5 py-4 text-gray-900 font-semibold">
         {item.product_type_code == "TCPKC" ||
         item.product_type_code == "TCPKP" ||
         item.product_type_code == "TCPSS"
           ? formatedPrice.discount
           : 0}
       </td>
-      <td className="px-5 py-4">
+      <td className="px-5 py-4 text-gray-900 font-semibold">
         {item.product_type_code == "TCPKC" ||
         item.product_type_code == "TCPKP" ||
         item.product_type_code == "TCPSS"

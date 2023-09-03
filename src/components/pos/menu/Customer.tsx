@@ -8,16 +8,41 @@ export type CustomerType = {
   customer_type_name: string;
 };
 
+export type checkCustomerDiscountType = {
+  percentage: number;
+  priceAdd: number;
+};
+
+export const checkCustomerDiscountPercentage = (
+  code: string
+): checkCustomerDiscountType => {
+  let result: checkCustomerDiscountType = { percentage: 0, priceAdd: 0 };
+  if (code == "TKOA") {
+    result = { percentage: 10, priceAdd: 0 };
+  } else if (code == "TKOB") {
+    result = { percentage: 15, priceAdd: 0 };
+  } else if (code == "TKOC") {
+    result = { percentage: 20, priceAdd: 0 };
+  } else if (code == "TKOD") {
+    result = { percentage: 22.5, priceAdd: 0 };
+  } else {
+    result = { percentage: 0, priceAdd: 1500 };
+  }
+  return result;
+};
+
 export default function Customer({
   setDiscountPercenteage,
+  setShowMenu,
 }: {
   setDiscountPercenteage: React.Dispatch<React.SetStateAction<number>>;
+  setShowMenu: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const [skip, setSkip] = useState(false);
   const accessToken = localStorage.getItem("accessToken") as string;
 
   //   const productionUrl =
-  const baseURL = "https://127.0.0.1:4000/api";
+  const baseURL = "http://127.0.0.1:4000/api";
   // const baseURL = "https://pos-backend.piasarimurni.site/api";
 
   const { data, isLoading } = useQuery({
@@ -42,6 +67,7 @@ export default function Customer({
   }, []);
 
   const handleSelectCustomer = (choice: number, discount: number = 0) => {
+    setShowMenu(true);
     let cid: CustomerType | undefined;
     switch (choice) {
       case 0:
@@ -49,6 +75,7 @@ export default function Customer({
         cid = data?.find((customer) => customer.customer_type_code === "TKOA");
         localStorage.setItem("customerTypeId", cid?.id.toString() || "");
         localStorage.setItem("customerDiscount", discount.toString());
+        localStorage.setItem("setCustomerType", "selected");
         setDiscountPercenteage(discount);
         break;
 
@@ -57,6 +84,7 @@ export default function Customer({
         cid = data?.find((customer) => customer.customer_type_code === "GRB");
         localStorage.setItem("customerTypeId", cid?.id.toString() || "");
         localStorage.setItem("customerDiscount", discount.toString());
+        localStorage.setItem("setCustomerType", "selected");
         setDiscountPercenteage(discount);
         break;
 
@@ -65,6 +93,7 @@ export default function Customer({
         cid = data?.find((customer) => customer.customer_type_code === "GJK");
         localStorage.setItem("customerTypeId", cid?.id.toString() || "");
         localStorage.setItem("customerDiscount", discount.toString());
+        localStorage.setItem("setCustomerType", "selected");
         setDiscountPercenteage(discount);
         break;
 
@@ -73,6 +102,7 @@ export default function Customer({
         cid = data?.find((customer) => customer.customer_type_code === "SHP");
         localStorage.setItem("customerTypeId", cid?.id.toString() || "");
         localStorage.setItem("customerDiscount", discount.toString());
+        localStorage.setItem("setCustomerType", "selected");
         setDiscountPercenteage(discount);
         break;
 
@@ -81,6 +111,7 @@ export default function Customer({
         cid = data?.find((customer) => customer.customer_type_code === "TKOB");
         localStorage.setItem("customerTypeId", cid?.id.toString() || "");
         localStorage.setItem("customerDiscount", discount.toString());
+        localStorage.setItem("setCustomerType", "selected");
         setDiscountPercenteage(discount);
         break;
 
@@ -89,6 +120,7 @@ export default function Customer({
         cid = data?.find((customer) => customer.customer_type_code === "TKOC");
         localStorage.setItem("customerTypeId", cid?.id.toString() || "");
         localStorage.setItem("customerDiscount", discount.toString());
+        localStorage.setItem("setCustomerType", "selected");
         setDiscountPercenteage(discount);
         break;
 
@@ -97,6 +129,7 @@ export default function Customer({
         cid = data?.find((customer) => customer.customer_type_code === "TKOD");
         localStorage.setItem("customerTypeId", cid?.id.toString() || "");
         localStorage.setItem("customerDiscount", discount.toString());
+        localStorage.setItem("setCustomerType", "selected");
         setDiscountPercenteage(discount);
         break;
     }
