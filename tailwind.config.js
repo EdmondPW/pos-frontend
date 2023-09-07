@@ -5,8 +5,6 @@ export default {
     extend: {
       fontFamily: {
         saxmono: ["saxmono", "sans-serif"],
-      },
-      fontFamily: {
         times: ["times", "sans-serif"],
       },
     },

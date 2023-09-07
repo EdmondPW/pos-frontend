@@ -159,8 +159,8 @@ const ReceiptLayout = forwardRef(
       setRoundDown(totalPrice - addDiscount - _roundDown);
 
       const currentDate = new Date();
-      const currentDay = currentDate.getDay();
-      const currentMonth = currentDate.getMonth();
+      const currentDay = currentDate.getDate();
+      const currentMonth = currentDate.getMonth() + 1;
       const currentYear = currentDate.getFullYear();
 
       setDay(currentDay.toString());
@@ -234,29 +234,27 @@ const ReceiptLayout = forwardRef(
 
             //
             return (
-              <>
-                <div className="flex w-full text-sm" key={index}>
-                  <div className="flex flex-col w-full">
-                    <p>{item.product_name}</p>
-                    <div className="w-full flex flex-row">
-                      <div className="flex flex-row w-3/4">
-                        <p className="mr-auto">
-                          {item.isBox == true ? (
-                            <p>{item.quantity / 4} box</p>
-                          ) : (
-                            <p>{item.quantity} pcs</p>
-                          )}
-                        </p>
+              <div className="flex w-full text-sm" key={"checkout_" + index}>
+                <div className="flex flex-col w-full">
+                  <p>{item.product_name}</p>
+                  <div className="w-full flex flex-row">
+                    <div className="flex flex-row w-3/4">
+                      <div className="mr-auto">
+                        {item.isBox == true ? (
+                          <p>{item.quantity / 4} box</p>
+                        ) : (
+                          <p>{item.quantity} pcs</p>
+                        )}
+                      </div>
 
-                        <p className="mx-auto">X {formatedPrice}</p>
-                      </div>
-                      <div className="flex place-content-end w-1/4">
-                        <p>{fullFormatedPrice}</p>
-                      </div>
+                      <p className="mx-auto">X {formatedPrice}</p>
+                    </div>
+                    <div className="flex place-content-end w-1/4">
+                      <p>{fullFormatedPrice}</p>
                     </div>
                   </div>
                 </div>
-              </>
+              </div>
             );
           })}
           <h1>-------------------------------</h1>

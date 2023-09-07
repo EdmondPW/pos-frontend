@@ -264,8 +264,6 @@ export default function Pos_dashboard() {
             },
           }
         );
-        // console.log("new sales created");
-        // console.log(createNewSalesTransaction);
 
         items.forEach((item) => {
           createItemTransaction(
@@ -447,6 +445,7 @@ export default function Pos_dashboard() {
     transactionData.total_paid_ojol = 0;
     transactionData.sales_transaction_status = "";
     setTransaction(transactionData);
+    setDiscountPercentage(-1);
     setItems([]);
     localStorage.removeItem("customerType");
     localStorage.removeItem("customerTypeId");
@@ -616,7 +615,7 @@ export default function Pos_dashboard() {
                                 items={items}
                                 setItems={setItems}
                                 discountPercentage={discountPercentage}
-                                key={index}
+                                key={"row_" + index}
                               />
                             </>
                           );

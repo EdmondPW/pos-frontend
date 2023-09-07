@@ -54,6 +54,7 @@ export default function TransactionList({
         customerId = item.customer_type.id;
         // customerType = item.customer_type.customer_type_name;
         customerTypeCode = item.customer_type.customer_type_code;
+        console.log(item);
         setTransaction({
           id: item.id,
           sales_transaction_number: item.sales_transaction_number,

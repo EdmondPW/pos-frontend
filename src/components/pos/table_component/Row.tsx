@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ItemTransactionWriteWithItemData } from "../../type/itemTransactionType";
 import { formatingValue } from "../PosDashboard";
 
@@ -31,6 +31,15 @@ export default function Row({
     discountedPrice: "",
   });
 
+  const [alreadyAddPrice, setAlreadyAddPrice] = useState(false);
+  const originaPrice = useRef(item.product_price);
+
+  useEffect(() => {
+    if (discountPercentage == -1) {
+      setAlreadyAddPrice(false);
+    }
+  }, [discountPercentage]);
+
   const handleSetBox = () => {
     const currentBox = !box;
     setBox(!box);
@@ -62,6 +71,23 @@ export default function Row({
     } else {
       updateItems[find].quantity += 1;
     }
+    console.log("increase button");
+    console.log("already add price: " + alreadyAddPrice);
+    console.log("item disount in row: " + discountPercentage + "%");
+    console.log("original price: " + item.product_price);
+    let tempPrice = item.product_price;
+    if (discountPercentage != 0 && alreadyAddPrice == true) {
+      if (updateItems[find].product_type_code == "PIA") {
+        setAlreadyAddPrice(false);
+        updateItems[find].product_price = originaPrice.current;
+      }
+    } else if (discountPercentage == 0 && alreadyAddPrice == false) {
+      if (updateItems[find].product_type_code == "PIA") {
+        setAlreadyAddPrice(true);
+        updateItems[find].product_price = tempPrice + 1500;
+      }
+    }
+
     if (
       updateItems[find].product_type_code == "TCPKC" ||
       updateItems[find].product_type_code == "TCPKP" ||
@@ -96,6 +122,26 @@ export default function Row({
       }
       setItems([...updateItems]);
     }
+    console.log("decrease button");
+    console.log("already add price: " + alreadyAddPrice);
+    console.log("item disount in row: " + discountPercentage + "%");
+    console.log("original price: " + item.product_price);
+    let tempPrice = item.product_price;
+    if (discountPercentage != 0 && alreadyAddPrice == true) {
+      if (updateItems[find].product_type_code == "PIA") {
+        setAlreadyAddPrice(false);
+        /// jika bukan ojol dan sudah tambah harga, kembali ke harga asal
+
+        updateItems[find].product_price = originaPrice.current;
+      }
+    } else if (discountPercentage == 0 && alreadyAddPrice == false) {
+      if (updateItems[find].product_type_code == "PIA") {
+        /// jika ojol dan belum tambah harga, tambah harga +1500
+        setAlreadyAddPrice(true);
+        updateItems[find].product_price = tempPrice + 1500;
+      }
+    }
+
     if (updateItems[find].quantity >= 4 && box == true) {
       updateItems[find].quantity -= 4;
       if (
@@ -118,7 +164,26 @@ export default function Row({
   };
 
   useEffect(() => {
+    let tempPrice = item.product_price;
+    if (discountPercentage != 0 && alreadyAddPrice == true) {
+      if (item.product_type_code == "PIA") {
+        setAlreadyAddPrice(false);
+        /// jika bukan ojol dan sudah tambah harga, kembali ke harga asal
+
+        item.product_price = originaPrice.current;
+      }
+    } else if (discountPercentage == 0 && alreadyAddPrice == false) {
+      if (item.product_type_code == "PIA") {
+        /// jika ojol dan belum tambah harga, tambah harga +1500
+        setAlreadyAddPrice(true);
+        item.product_price = tempPrice + 1500;
+      }
+    }
+  }, [discountPercentage]);
+
+  useEffect(() => {
     let _formatedPrice;
+
     if (box) {
       _formatedPrice = formatingValue(item.product_price * 4);
     } else {
@@ -146,7 +211,7 @@ export default function Row({
       nonDiscountedPrice: _formatedNonDiscountPrice,
       discountedPrice: _formatedDiscountPrice,
     });
-  }, [items, item, discountPercentage, box]);
+  }, [items, item, discountPercentage, box, alreadyAddPrice]);
 
   useEffect(() => {
     console.log("items berubah");
