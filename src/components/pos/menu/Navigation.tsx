@@ -94,6 +94,7 @@ export default function Navigation({
           className=" bg-red-500 w-full h-20 rounded-md text-white shadow-sm"
           onClick={() => {
             getAllTransactionThisShif();
+            localStorage.clear();
             handleLogout();
           }}
         >

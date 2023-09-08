@@ -4,6 +4,7 @@ interface ActionTransactionProps {
   setShowCheckout: React.Dispatch<React.SetStateAction<boolean>>;
   setTransaction: React.Dispatch<React.SetStateAction<SalesTransactionWrite>>;
   setAddTransaction: React.Dispatch<React.SetStateAction<boolean>>;
+  setUpdatingStatus: React.Dispatch<React.SetStateAction<boolean>>;
   finilizedTransaction: (
     status: string,
     updating: boolean,
@@ -18,6 +19,7 @@ export default function ActionTransaction({
   setTransaction,
   transaction,
   setAddTransaction,
+  setUpdatingStatus,
   finilizedTransaction,
   clearTransactionAndItems,
 }: ActionTransactionProps) {
@@ -27,7 +29,10 @@ export default function ActionTransaction({
         <div className="flex items-center justify-center">
           <button
             type="button"
-            onClick={() => clearTransactionAndItems()}
+            onClick={() => {
+              setUpdatingStatus(false);
+              clearTransactionAndItems();
+            }}
             className="bg-blue-400 focus:bg-blue-500 w-40 h-20 rounded-lg border-2 border-slate-700 focus:border-blue-700 focus:border-4 font-bold text-white"
           >
             CLEAR

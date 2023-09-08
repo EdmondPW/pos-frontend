@@ -134,6 +134,25 @@ const ReceiptLayout = forwardRef(
         hours.toString() + ":" + minutes.toString() + ":" + seconds.toString()
       );
       calulatingTotalDiscount();
+
+      const getCustomerType = localStorage.getItem("customerType") as string;
+      if (
+        getCustomerType == "TKOA" ||
+        getCustomerType == "TKOB" ||
+        getCustomerType == "TKOC" ||
+        getCustomerType == "TKOD"
+      ) {
+        setCustomerTypeString("Toko");
+      }
+      if (getCustomerType == "GJK") {
+        setCustomerTypeString("Gojek");
+      }
+      if (getCustomerType == "GRB") {
+        setCustomerTypeString("Grab");
+      }
+      if (getCustomerType == "SHP") {
+        setCustomerTypeString("Shopee");
+      }
     }, [
       addDiscount,
       discountPercentage,

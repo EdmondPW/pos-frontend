@@ -99,11 +99,11 @@ export default function Pos_dashboard() {
     );
     // console.log(`transaction count: ${transactionCount.data}`);
     let currentTransactionNumber = "00" + transactionCount.data.toString();
-    if (transactionCount.data > 10 && transactionCount.data < 100) {
+    if (transactionCount.data >= 10 && transactionCount.data < 100) {
       currentTransactionNumber = "0" + transactionCount.data.toString();
     }
 
-    if (transactionCount.data > 100) {
+    if (transactionCount.data >= 100) {
       currentTransactionNumber = transactionCount.data.toString();
     }
 
@@ -185,11 +185,11 @@ export default function Pos_dashboard() {
           )
           .then((res) => {
             currentTransactionNumber = "00" + res.data.toString();
-            if (res.data > 10 && res.data < 100) {
+            if (res.data >= 10 && res.data < 100) {
               currentTransactionNumber = "0" + res.data.toString();
             }
 
-            if (res.data > 100) {
+            if (res.data >= 100) {
               currentTransactionNumber = res.data.toString();
             }
           })
@@ -436,6 +436,7 @@ export default function Pos_dashboard() {
 
   const clearTransactionAndItems = () => {
     let transactionData: SalesTransactionWrite = transaction;
+    transactionData.id = -1;
     transactionData.total_price = 0;
     transactionData.total_discount = 0;
     transactionData.sales_transaction_number = "";
@@ -517,7 +518,9 @@ export default function Pos_dashboard() {
       finalTotalPrice += finalPrice;
     });
     setTotalPrice(finalTotalPrice);
-    setupTransaction();
+    if (updatingStatus == false) {
+      setupTransaction();
+    }
   }, [items, discountPercentage]);
 
   const printShiftWhenLogout = () => {
@@ -651,6 +654,7 @@ export default function Pos_dashboard() {
                   setShowCheckout={setShowCheckout}
                   setTransaction={setTransaction}
                   transaction={transaction}
+                  setUpdatingStatus={setUpdatingStatus}
                   finilizedTransaction={finilizedTransaction}
                   clearTransactionAndItems={clearTransactionAndItems}
                   setAddTransaction={setAddTransaction}
